@@ -172,12 +172,11 @@ class Ban(commands.Cog):
             "uuid": uuid,
             "reason": reason,
             "registerer": registerer,
-            "time": created_at_jst,
+            "time": time,
             "message_link": message_link
         }]
 
         json_data[len(json_data):len(json_data)] = add_data
-        print(json_data)
         self.save_json(json_data)
 
         await ctx.send('登録しました')
