@@ -4,11 +4,12 @@ from discord.ext import commands
 
 TOKEN = os.environ(['KIRBY_TOKEN'])
 
+
 intents = discord.Intents.all()
 
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents, help_command=None)
 
-cog_list = ['Forward', 'MCUUID']
+cog_list = ['Forward', 'Ban']
 
 
 @bot.event
@@ -27,4 +28,17 @@ async def reload(ctx):
 @bot.command()
 # @commands.has_role()
 async def shutdown(ctx):
-    pass
+    print("shutdown")
+    await ctx.send('shutdown')
+    try:
+        await bot.logout()
+    except:  # noqa
+        print("EnvironmentError")
+        bot.clear()
+
+if __name__ == '__main__':
+    for cog in cog_list:
+        name = f'Cogs.{cog}'
+        bot.load_extension(name)
+
+bot.run(TOKEN)
