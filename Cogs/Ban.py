@@ -142,7 +142,7 @@ class Ban(commands.Cog):
         self.save_json(json_data)
         await ctx.send('削除しました')
 
-    @commands.command(name='old_ban')
+    @commands.command(name='old_ban', aliases=['ob'])
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _old_ban(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
         json_key = mcid.lower()
