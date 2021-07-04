@@ -5,7 +5,7 @@ from pytz import timezone
 from discord.ext import commands
 
 
-class MCUUID(commands.Cog):
+class Ban(commands.Cog):
     def __init__(self, bot: commands.bot):
         self.bot = bot
         print(__name__)
@@ -42,7 +42,7 @@ class MCUUID(commands.Cog):
             await ctx.send('サーバーエラー')
 
     @commands.command(name='ban')
-    async def _ban(self, ctx: commands.context, mcid: str, reson: str):
+    async def _ban(self, ctx: commands.context, mcid: str, reason: str):
         json_data = self.load_json()
         if mcid in json_data:
             await ctx.send('このIDはすでにBAN登録されています')
@@ -65,7 +65,7 @@ class MCUUID(commands.Cog):
 
         json_data[mcid] = {
             "uuid": uuid,
-            "reason": reson,
+            "reason": reason,
             "registerer": registerer,
             "time": created_at_jst,
             "message_link": message_link
@@ -73,13 +73,25 @@ class MCUUID(commands.Cog):
 
         self.save_json(json_data)
 
-        await ctx.send('登録しました')
+        face_url = f'https://crafatar.com/avatars/{uuid}'
+
+        embed = discord.Embed(
+            title=mcid, description=uuid, color=0xff0000)
+        embed.set_thumbnail(
+            url=face_url)
+        embed.add_field(name="BAN理由", value=reason, inline=False)
+        embed.add_field(name="BAN登録", value=registerer, inline=True)
+        embed.add_field(name="日時", value=created_at_jst, inline=True)
+        embed.add_field(
+            name="リンク", value=f"[{message_link}]({message_link})", inline=False)
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='search')
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
         if mcid not in json_data:
-            await ctx.send('見つかりませんでした。')
+            await ctx.send('指定されたIDは見つかりませんでした')
             return
 
         user_data = json_data[mcid]
@@ -102,6 +114,19 @@ class MCUUID(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command(name='unban')
+    async def _unban(self, ctx, mcid):
+        json_data = self.load_json()
+
+        if mcid not in json_data:
+            await ctx.send('指定されたIDは登録されていません')
+            return
+
+        json_data.pop(mcid)
+
+        self.save_json(json_data)
+        await ctx.send('削除しました')
+
 
 def setup(bot):
-    bot.add_cog(MCUUID(bot))
+    bot.add_cog(Ban(bot))
