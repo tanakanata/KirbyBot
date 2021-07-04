@@ -1,4 +1,6 @@
 import json
+from os import name
+from discord.ext.commands.core import command
 import requests
 import discord
 from pytz import timezone
@@ -42,6 +44,7 @@ class Ban(commands.Cog):
             await ctx.send('サーバーエラー')
 
     @commands.command(name='ban')
+    @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _ban(self, ctx: commands.context, mcid: str, reason: str):
         json_key = mcid.lower()
 
@@ -96,6 +99,7 @@ class Ban(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name='search')
+    @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
         json_key = mcid.lower()
@@ -126,6 +130,7 @@ class Ban(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name='unban')
+    @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _unban(self, ctx, mcid):
         json_data = self.load_json()
         json_key = mcid.lower()
