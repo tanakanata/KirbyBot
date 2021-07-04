@@ -43,12 +43,18 @@ class Ban(commands.Cog):
 
     @commands.command(name='ban')
     async def _ban(self, ctx: commands.context, mcid: str, reason: str):
+        json_key = mcid.lower()
+
         json_data = self.load_json()
-        if mcid in json_data:
+        if json_key in json_data:
             await ctx.send('このIDはすでにBAN登録されています')
             return
+        # ニックネームが設定されているか確認　設定されていない場合名前を指定
+        if ctx.author.nick is None:
+            registerer = ctx.author.name
+        else:
+            registerer = ctx.author.nick
 
-        registerer = ctx.author.nick
         message_link = 'https://discord.com/channels/{0}/{1}/{2}'.format(
             ctx.guild.id, ctx.message.channel.id, ctx.message.id)
         created_at_utc = ctx.message.created_at
@@ -59,11 +65,13 @@ class Ban(commands.Cog):
             await ctx.send('IDが見つかりませんでした')
             return
         elif status_code == 200:
+            minecraft_id = res.json()['name']
             uuid = res.json()['id']
         else:
             await ctx.send('サーバーエラー')
 
-        json_data[mcid] = {
+        json_data[json_key] = {
+            "minecraft_id": minecraft_id,
             "uuid": uuid,
             "reason": reason,
             "registerer": registerer,
@@ -76,7 +84,7 @@ class Ban(commands.Cog):
         face_url = f'https://crafatar.com/avatars/{uuid}'
 
         embed = discord.Embed(
-            title=mcid, description=uuid, color=0xff0000)
+            title=minecraft_id, description=uuid, color=0xff0000)
         embed.set_thumbnail(
             url=face_url)
         embed.add_field(name="BAN理由", value=reason, inline=False)
@@ -90,11 +98,14 @@ class Ban(commands.Cog):
     @commands.command(name='search')
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
-        if mcid not in json_data:
+        json_key = mcid.lower()
+
+        if json_key not in json_data:
             await ctx.send('指定されたIDは見つかりませんでした')
             return
 
-        user_data = json_data[mcid]
+        user_data = json_data[json_key]
+        minecraft_id = user_data['minecraft_id']
         uuid = user_data['uuid']
         reason = user_data['reason']
         registerer = user_data['registerer']
@@ -103,7 +114,7 @@ class Ban(commands.Cog):
         face_url = f'https://crafatar.com/avatars/{uuid}'
 
         embed = discord.Embed(
-            title=mcid, description=uuid, color=0xff0000)
+            title=minecraft_id, description=uuid, color=0xff0000)
         embed.set_thumbnail(
             url=face_url)
         embed.add_field(name="BAN理由", value=reason, inline=False)
@@ -117,8 +128,9 @@ class Ban(commands.Cog):
     @commands.command(name='unban')
     async def _unban(self, ctx, mcid):
         json_data = self.load_json()
+        json_key = mcid.lower()
 
-        if mcid not in json_data:
+        if json_key not in json_data:
             await ctx.send('指定されたIDは登録されていません')
             return
 
