@@ -1,6 +1,4 @@
 import json
-from os import name
-from discord.ext.commands.core import command
 import requests
 import discord
 from pytz import timezone
@@ -143,6 +141,37 @@ class Ban(commands.Cog):
 
         self.save_json(json_data)
         await ctx.send('削除しました')
+
+    @commands.command(name='old_ban')
+    @commands.has_any_role(278312017775820801, 800638758394265610)
+    async def _old_ban(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
+        json_key = mcid.lower()
+
+        json_data = self.load_json()
+        if json_key in json_data:
+            await ctx.send('このIDはすでにBAN登録されています')
+            return
+
+        res, status_code = self.get_uuid(mcid)
+        if status_code == 204:
+            await ctx.send('IDが見つかりませんでした')
+            return
+        elif status_code == 200:
+            minecraft_id = res.json()['name']
+            uuid = res.json()['id']
+        else:
+            await ctx.send('サーバーエラー')
+
+        json_data[json_key] = {
+            "minecraft_id": minecraft_id,
+            "uuid": uuid,
+            "reason": reason,
+            "registerer": registerer,
+            "time": time,
+            "message_link": message_link
+        }
+
+        self.save_json(json_data)
 
 
 def setup(bot):
