@@ -173,6 +173,8 @@ class Ban(commands.Cog):
 
         self.save_json(json_data)
 
+        await ctx.send('登録しました')
+
 
 def setup(bot):
     bot.add_cog(Ban(bot))
