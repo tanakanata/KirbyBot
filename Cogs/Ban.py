@@ -18,7 +18,7 @@ class Ban(commands.Cog):
 
     def save_json(self, json_data):
         save_file = open('ban_list.json', 'w')
-        json.dump(json_data, save_file)
+        json.dump(json_data, save_file, indent=4)
         save_file.close
 
     def get_uuid(self, mcid: str):
@@ -44,10 +44,11 @@ class Ban(commands.Cog):
     @commands.command(name='ban')
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _ban(self, ctx: commands.context, mcid: str, reason: str):
-        json_key = mcid.lower()
 
         json_data = self.load_json()
-        if json_key in json_data:
+        minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
+
+        if mcid.casefold() in minecraft_id_list:
             await ctx.send('このIDはすでにBAN登録されています')
             return
         # ニックネームが設定されているか確認　設定されていない場合名前を指定
@@ -71,15 +72,16 @@ class Ban(commands.Cog):
         else:
             await ctx.send('サーバーエラー')
 
-        json_data[json_key] = {
+        add_data = [{
             "minecraft_id": minecraft_id,
             "uuid": uuid,
             "reason": reason,
             "registerer": registerer,
             "time": created_at_jst,
             "message_link": message_link
-        }
+        }]
 
+        json_data[len(json_data):len(json_data)] = add_data
         self.save_json(json_data)
 
         face_url = f'https://crafatar.com/avatars/{uuid}'
@@ -100,13 +102,14 @@ class Ban(commands.Cog):
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
-        json_key = mcid.lower()
+        minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
-        if json_key not in json_data:
+        if mcid.casefold() not in minecraft_id_list:
             await ctx.send('指定されたIDは見つかりませんでした')
             return
 
-        user_data = json_data[json_key]
+        user_index = minecraft_id_list.index(mcid.casefold())
+        user_data = json_data[user_index]
         minecraft_id = user_data['minecraft_id']
         uuid = user_data['uuid']
         reason = user_data['reason']
@@ -131,13 +134,14 @@ class Ban(commands.Cog):
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _unban(self, ctx, mcid):
         json_data = self.load_json()
-        json_key = mcid.lower()
+        minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
-        if json_key not in json_data:
+        if mcid.casefold() not in minecraft_id_list:
             await ctx.send('指定されたIDは登録されていません')
             return
 
-        json_data.pop(mcid)
+        user_index = minecraft_id_list.index(mcid.casefold())
+        json_data.pop[user_index]
 
         self.save_json(json_data)
         await ctx.send('削除しました')
@@ -145,10 +149,11 @@ class Ban(commands.Cog):
     @commands.command(name='old_ban', aliases=['ob'])
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _old_ban(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
-        json_key = mcid.lower()
 
         json_data = self.load_json()
-        if json_key in json_data:
+        minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
+
+        if mcid.casefold() in minecraft_id_list:
             await ctx.send('このIDはすでにBAN登録されています')
             return
 
@@ -162,19 +167,24 @@ class Ban(commands.Cog):
         else:
             await ctx.send('サーバーエラー')
 
-        json_data[json_key] = {
+        add_data = [{
             "minecraft_id": minecraft_id,
             "uuid": uuid,
             "reason": reason,
             "registerer": registerer,
             "time": time,
             "message_link": message_link
-        }
+        }]
 
+        json_data[len(json_data):len(json_data)] = add_data
         self.save_json(json_data)
 
         await ctx.send('登録しました')
 
+    @_ban.error
+    async def info_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Usage: /ban <PlayerID> <理由>')
 
 def setup(bot):
     bot.add_cog(Ban(bot))
