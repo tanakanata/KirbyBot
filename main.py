@@ -9,7 +9,7 @@ intents = discord.Intents.all()
 
 bot = commands.Bot(command_prefix='/', intents=intents, help_command=None)
 
-cog_list = ['Forward', 'Ban']
+cog_list = ['Forward', 'Ban', 'Help']
 
 
 @bot.event
@@ -26,7 +26,6 @@ async def reload(ctx):
 
 
 @bot.command()
-# @commands.has_role()
 async def shutdown(ctx):
     print("shutdown")
     await ctx.send('shutdown')

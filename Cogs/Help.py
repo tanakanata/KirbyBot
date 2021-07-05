@@ -1,6 +1,4 @@
-from os import name
 from discord.ext import commands
-from discord.ext.commands.core import command
 
 
 class Help(commands.Cog):
@@ -8,9 +6,11 @@ class Help(commands.Cog):
         self.bot = bot
         print(__name__)
 
-    @commands.command()
+    @commands.command(ailiases=['Help'])
     async def help(self, ctx):
-        pass
+        msg = '/uuid <PlayerID> : UUIDを取得します \n /ban <PlayerID> <理由> : BAN情報をBOTに登録します \n /unban <PlayerID> : BAN情報をBOTから削除します \n /search <PlayerID> : BAN情報を検索します'
+
+        await ctx.send(msg)
 
 
 def setup(bot):
