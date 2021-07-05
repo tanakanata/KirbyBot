@@ -1,7 +1,7 @@
 import json
 import requests
+import datetime
 import discord
-from pytz import timezone
 from discord.ext import commands
 
 
@@ -60,9 +60,8 @@ class Ban(commands.Cog):
 
         message_link = 'https://discord.com/channels/{0}/{1}/{2}'.format(
             ctx.guild.id, ctx.message.channel.id, ctx.message.id)
-        created_at_utc = ctx.message.created_at
-        created_at_jst = created_at_utc.astimezone(
-            timezone('Asia/Tokyo')).strftime('%Y-%m-%d %H:%M:%S')
+
+        created_at_jst = ctx.message.created_at + datetime.timedelta(hours=9).strftime('%Y-%m-%d %H:%M:%S')
         res, status_code = self.get_uuid(mcid)
         if status_code == 204:
             await ctx.send('IDが見つかりませんでした')
@@ -99,9 +98,9 @@ class Ban(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='search', alliases=['Search', 'SEARCH', 's'])
-    @commands.guild_only()
-    @commands.has_any_role(278312017775820801, 800638758394265610)
+    @ commands.command(name='search', alliases=['Search', 'SEARCH', 's'])
+    @ commands.guild_only()
+    @ commands.has_any_role(278312017775820801, 800638758394265610)
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
@@ -132,9 +131,9 @@ class Ban(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='unban', aliases=['Unban', 'UNBAN'])
-    @commands.guild_only()
-    @commands.has_any_role(278312017775820801, 800638758394265610)
+    @ commands.command(name='unban', aliases=['Unban', 'UNBAN'])
+    @ commands.guild_only()
+    @ commands.has_any_role(278312017775820801, 800638758394265610)
     async def _unban(self, ctx, mcid):
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
@@ -149,9 +148,9 @@ class Ban(commands.Cog):
         self.save_json(json_data)
         await ctx.send('削除しました')
 
-    @commands.command(name='old_ban', aliases=['ob'])
-    @commands.guild_only()
-    @commands.has_any_role(278312017775820801, 800638758394265610)
+    @ commands.command(name='old_ban', aliases=['ob'])
+    @ commands.guild_only()
+    @ commands.has_any_role(278312017775820801, 800638758394265610)
     async def _old_ban(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
 
         json_data = self.load_json()
@@ -185,22 +184,22 @@ class Ban(commands.Cog):
 
         await ctx.send('登録しました')
 
-    @_uuid.error
+    @ _uuid.error
     async def _uuid_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('Usage: /uuid <PlayerID>')
 
-    @_ban.error
+    @ _ban.error
     async def _ban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('Usage: /ban <PlayerID> <理由>')
 
-    @_unban.error
+    @ _unban.error
     async def _unban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('Usage: /unban <PlayerID>')
 
-    @_search.error
+    @ _search.error
     async def _search_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('Usage: /search <PlayerID>')
