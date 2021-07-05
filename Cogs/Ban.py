@@ -144,7 +144,7 @@ class Ban(commands.Cog):
             return
 
         user_index = minecraft_id_list.index(mcid.casefold())
-        json_data.pop[user_index]
+        json_data.pop(user_index)
 
         self.save_json(json_data)
         await ctx.send('削除しました')
