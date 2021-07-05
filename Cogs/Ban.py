@@ -29,7 +29,7 @@ class Ban(commands.Cog):
         status_code = res.status_code
         return res, status_code
 
-    @commands.command(name='uuid')
+    @commands.command(name='uuid', alliases=['UUID'])
     async def _uuid(self, ctx: commands.context, mcid: str):
         res, status_code = self.get_uuid(mcid)
         if status_code == 204:
@@ -41,7 +41,7 @@ class Ban(commands.Cog):
         else:
             await ctx.send('サーバーエラー')
 
-    @commands.command(name='ban')
+    @commands.command(name='ban', alliases=['Ban', 'BAN'])
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _ban(self, ctx: commands.context, mcid: str, reason: str):
 
@@ -98,7 +98,7 @@ class Ban(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='search')
+    @commands.command(name='search', alliases=['Search', 'SEARCH', 's'])
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
@@ -130,7 +130,7 @@ class Ban(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='unban')
+    @commands.command(name='unban', aliases=['Unban', 'UNBAN'])
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _unban(self, ctx, mcid):
         json_data = self.load_json()
@@ -185,6 +185,7 @@ class Ban(commands.Cog):
     async def info_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('Usage: /ban <PlayerID> <理由>')
+
 
 def setup(bot):
     bot.add_cog(Ban(bot))
