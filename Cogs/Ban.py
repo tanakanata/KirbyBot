@@ -181,8 +181,18 @@ class Ban(commands.Cog):
 
         await ctx.send('登録しました')
 
+    @_uuid.error
+    async def _uuid_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Usage: /ban <PlayerID> <理由>')
+
     @_ban.error
-    async def info_error(self, ctx, error):
+    async def _ban_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Usage: /ban <PlayerID> <理由>')
+
+    @_unban.error
+    async def _unban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('Usage: /ban <PlayerID> <理由>')
 
