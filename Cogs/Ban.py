@@ -42,6 +42,7 @@ class Ban(commands.Cog):
             await ctx.send('サーバーエラー')
 
     @commands.command(name='ban', alliases=['Ban', 'BAN'])
+    @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _ban(self, ctx: commands.context, mcid: str, reason: str):
 
@@ -99,6 +100,7 @@ class Ban(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name='search', alliases=['Search', 'SEARCH', 's'])
+    @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
@@ -131,6 +133,7 @@ class Ban(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name='unban', aliases=['Unban', 'UNBAN'])
+    @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _unban(self, ctx, mcid):
         json_data = self.load_json()
@@ -147,6 +150,7 @@ class Ban(commands.Cog):
         await ctx.send('削除しました')
 
     @commands.command(name='old_ban', aliases=['ob'])
+    @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _old_ban(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
 
@@ -184,7 +188,7 @@ class Ban(commands.Cog):
     @_uuid.error
     async def _uuid_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /ban <PlayerID> <理由>')
+            await ctx.send('Usage: /uuid <PlayerID>')
 
     @_ban.error
     async def _ban_error(self, ctx, error):
@@ -194,7 +198,12 @@ class Ban(commands.Cog):
     @_unban.error
     async def _unban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /ban <PlayerID> <理由>')
+            await ctx.send('Usage: /unban <PlayerID>')
+
+    @_search.error
+    async def _search_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Usage: /search <PlayerID>')
 
 
 def setup(bot):
