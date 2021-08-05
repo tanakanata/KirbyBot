@@ -29,6 +29,14 @@ class Ban(commands.Cog):
         status_code = res.status_code
         return res, status_code
 
+    def get_name_history(self, uuid: str):
+        url = 'https://api.mojang.com/users/profiles/{0}/name'.format(
+            uuid)
+        res = requests.get(url)
+
+        status_code = res.status_code
+        return res, status_code
+
     @commands.command(name='uuid', alliases=['UUID'])
     async def _uuid(self, ctx: commands.context, mcid: str):
         res, status_code = self.get_uuid(mcid)
@@ -44,7 +52,7 @@ class Ban(commands.Cog):
     @commands.command(name='ban', alliases=['Ban', 'BAN'])
     @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
-    async def _ban(self, ctx: commands.context, mcid: str, reason: str):
+    async def _ban(self, ctx: commands.context, mcid: str, arg: None, reason: str):
 
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
@@ -184,6 +192,25 @@ class Ban(commands.Cog):
 
         await ctx.send('登録しました')
 
+    # @ commands.command(name='name_history', aliases=['nh'])
+    # @ commands.guild_only()
+    # async def _name_history(self, ctx: commands.context, mcid: str):
+    #     res_1, status_code = self.get_uuid(mcid)
+    #     if status_code == 204:
+    #         await ctx.send('IDが見つかりませんでした')
+    #         return
+    #     elif status_code == 200:
+    #         uuid = res_1.json()['id']
+    #         await ctx.send(uuid)
+    #     else:
+    #         await ctx.send('サーバーエラー')
+
+    #     uuid = res_1.json()['id']
+
+    #     url = 'https://api.mojang.com/users/profiles/minecraft/{0}'.format(
+    #         mcid)
+    #     res_2 = requests.get('')
+
     @ _uuid.error
     async def _uuid_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -192,7 +219,7 @@ class Ban(commands.Cog):
     @ _ban.error
     async def _ban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /ban <PlayerID> <理由>')
+            await ctx.send('Usage: /ban <"-p" or "-s" > <PlayerID> <理由>')
 
     @ _unban.error
     async def _unban_error(self, ctx, error):
