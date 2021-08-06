@@ -53,11 +53,9 @@ class Ban(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _ban(self, ctx: commands.context, arg: str, mcid: str, reason: str):
-
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
-        print(arg)
         if arg != '-p' and arg != '-s':
             await ctx.send('第一引数が間違っています。')
             return
@@ -224,7 +222,7 @@ class Ban(commands.Cog):
     @ _ban.error
     async def _ban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /ban <"-p" or "-s" > <PlayerID> <理由>')
+            await ctx.send('Usage: /ban <-p or -s> <PlayerID> <理由>')
 
     @ _unban.error
     async def _unban_error(self, ctx, error):
