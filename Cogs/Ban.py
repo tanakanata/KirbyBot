@@ -69,7 +69,7 @@ class Ban(commands.Cog):
         message_link = 'https://discord.com/channels/{0}/{1}/{2}'.format(
             ctx.guild.id, ctx.message.channel.id, ctx.message.id)
 
-        created_at_jst = ctx.message.created_at + datetime.timedelta(hours=9).strftime('%Y-%m-%d %H:%M:%S')
+        created_at_jst = (ctx.message.created_at + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
         res, status_code = self.get_uuid(mcid)
         if status_code == 204:
             await ctx.send('IDが見つかりませんでした')
