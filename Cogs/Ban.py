@@ -52,11 +52,12 @@ class Ban(commands.Cog):
     @commands.command(name='ban', alliases=['Ban', 'BAN'])
     @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
-    async def _ban(self, ctx: commands.context, arg: None, mcid: str, reason: str):
+    async def _ban(self, ctx: commands.context, arg: str, mcid: str, reason: str):
 
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
+        print(arg)
         if arg != '-p' or arg != '-s':
             await ctx.send('第一引数が間違っています。')
             return
