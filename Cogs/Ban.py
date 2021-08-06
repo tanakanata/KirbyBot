@@ -58,7 +58,7 @@ class Ban(commands.Cog):
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
         print(arg)
-        if arg != '-p' or arg != '-s':
+        if arg != '-p' and arg != '-s':
             await ctx.send('第一引数が間違っています。')
             return
 
