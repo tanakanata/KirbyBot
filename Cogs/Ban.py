@@ -53,36 +53,45 @@ class Ban(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
     async def _ban(self, ctx: commands.context, arg: str, mcid: str, reason: str):
+        # 最新のBAN情報を読み出し
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
+        # 第一引数を判定
         if arg != '-p' and arg != '-s':
             await ctx.send('第一引数が間違っています。')
             return
 
+        # すでにBANされているか確認
         if mcid.casefold() in minecraft_id_list:
             await ctx.send('このIDはすでにBAN登録されています')
             return
+
         # ニックネームが設定されているか確認　設定されていない場合名前を指定
         if ctx.author.nick is None:
-            registerer = ctx.author.name
+            registerer: str = ctx.author.name
         else:
-            registerer = ctx.author.nick
+            registerer: str = ctx.author.nick
 
+        # メッセージリンクを作成
         message_link = 'https://discord.com/channels/{0}/{1}/{2}'.format(
             ctx.guild.id, ctx.message.channel.id, ctx.message.id)
 
-        created_at_jst = (ctx.message.created_at + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
+        # BANをした時間をJSTで作成
+        created_at_jst: str = (ctx.message.created_at + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
+
+        # UUIDを取得
         res, status_code = self.get_uuid(mcid)
         if status_code == 204:
             await ctx.send('IDが見つかりませんでした')
             return
         elif status_code == 200:
-            minecraft_id = res.json()['name']
+            minecraft_id: str = res.json()['name']
             uuid = res.json()['id']
         else:
             await ctx.send('サーバーエラー')
 
+        # JSONに保存する内容を作成
         add_data = [{
             "minecraft_id": minecraft_id,
             "uuid": uuid,
@@ -92,13 +101,19 @@ class Ban(commands.Cog):
             "message_link": message_link
         }]
 
+        # JSONに書き込み
         json_data[len(json_data):len(json_data)] = add_data
         self.save_json(json_data)
 
+        # 埋め込みに使う顔のURLを取得
         face_url = f'https://crafatar.com/avatars/{uuid}'
 
+        # IDの文字装飾を無効化
+        replace_id = minecraft_id.replace("_", "\_")
+
+        # embedを作成
         embed = discord.Embed(
-            title=minecraft_id, description=uuid, color=0xff0000)
+            title=replace_id, description=uuid, color=0xff0000)
         embed.set_thumbnail(
             url=face_url)
         embed.add_field(name="BAN理由", value=reason, inline=False)
@@ -107,6 +122,7 @@ class Ban(commands.Cog):
         embed.add_field(
             name="リンク", value=f"[{message_link}]({message_link})", inline=False)
 
+        # メッセージを送信
         await ctx.send(embed=embed)
 
     @ commands.command(name='search', alliases=['Search', 'SEARCH', 's'])
