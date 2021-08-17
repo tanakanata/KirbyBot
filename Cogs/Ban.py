@@ -37,6 +37,10 @@ class Ban(commands.Cog):
         status_code = res.status_code
         return res, status_code
 
+    def get_face(self, uuid: str):
+        url = f'https://crafatar.com/avatars/{uuid}'
+        return url
+
     @commands.command(name='uuid', alliases=['UUID'])
     async def _uuid(self, ctx: commands.context, mcid: str):
         res, status_code = self.get_uuid(mcid)
@@ -106,7 +110,7 @@ class Ban(commands.Cog):
         self.save_json(json_data)
 
         # 埋め込みに使う顔のURLを取得
-        face_url = f'https://crafatar.com/avatars/{uuid}'
+        face_url = self.get_face(uuid)
 
         # IDの文字装飾を無効化
         replace_id = minecraft_id.replace("_", "\_")
