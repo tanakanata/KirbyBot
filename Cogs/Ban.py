@@ -45,7 +45,7 @@ class Ban(commands.Cog):
     @commands.command(name='tempban', alliases=['Tempban', 'TempBan', 'TempBAN' 'tempBan', 'tempBAN', 'TEMPBAN'])
     @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
-    async def _tempban(self, ctx: commands.context, mcid: str, term: str, reason: str):
+    async def _tempban(self, ctx: commands.context, term: str, mcid: str, reason: str):
         # 最新のBAN情報を読み出し
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
