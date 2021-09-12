@@ -311,7 +311,7 @@ class Ban(commands.Cog):
     @_tempban.error
     async def _tempban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /tempban <PlayerID> <期間> <理由>')
+            await ctx.send('Usage: /tempban <期間> <PlayerID> <理由>')
 
     @ _ban.error
     async def _ban_error(self, ctx, error):
