@@ -263,7 +263,7 @@ class Ban(commands.Cog):
         self.save_json(json_data)
         await ctx.send('削除しました')
 
-    @ commands.command(name='search', alliases=['Search', 'SEARCH', 's'])
+    @ commands.command(name='search', aliases=['Search', 'SEARCH', 's'])
     async def _search(self, ctx, mcid):
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
