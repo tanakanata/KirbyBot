@@ -6,8 +6,9 @@ name = "pypi"
 [packages]
 py-cord = {ref = "f5c3e600158d804f9786d480182e495b4d53c8e7", git = "https://github.com/Pycord-Development/pycord.git"}
 requests = "*"
+pytz = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
