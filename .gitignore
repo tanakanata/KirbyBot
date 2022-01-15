@@ -3,3 +3,5 @@
 Cogs/__pycache__
 data.json
 .env
+config.json
+ban_list.json
