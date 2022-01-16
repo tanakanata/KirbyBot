@@ -2,3 +2,4 @@
 .DS_Store
 Cogs/__pycache__
 data.json
+.env
