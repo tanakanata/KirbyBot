@@ -324,7 +324,7 @@ class Ban(commands.Cog):
     @ _search.error
     async def _search_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /search <PlayerID>')
+            await ctx.send('Usage: //search <PlayerID>')
 
     @ _uuid.error
     async def _uuid_error(self, ctx, error):
