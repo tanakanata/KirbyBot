@@ -7,7 +7,7 @@ TOKEN = os.environ["DEBUG_TOKEN"]
 
 intents = discord.Intents.all()
 
-bot = commands.Bot(command_prefix='/', intents=intents, help_command=None)
+bot = commands.Bot(command_prefix='//', intents=intents, help_command=None)
 
 cog_list = ['Forward', 'Ban', 'Help']
 

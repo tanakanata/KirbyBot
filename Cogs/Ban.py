@@ -309,17 +309,17 @@ class Ban(commands.Cog):
     @_tempban.error
     async def _tempban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /tempban <期間> <PlayerID> <理由>')
+            await ctx.send('Usage: //tempban <期間> <PlayerID> <理由>')
 
     @ _ban.error
     async def _ban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /ban <-p or -s> <PlayerID> <理由>')
+            await ctx.send('Usage: //ban <-p or -s> <PlayerID> <理由>')
 
     @ _unban.error
     async def _unban_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /unban <PlayerID>')
+            await ctx.send('Usage: //unban <PlayerID>')
 
     @ _search.error
     async def _search_error(self, ctx, error):
@@ -329,7 +329,7 @@ class Ban(commands.Cog):
     @ _uuid.error
     async def _uuid_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Usage: /uuid <PlayerID>')
+            await ctx.send('Usage: //uuid <PlayerID>')
 
 
 def setup(bot):
