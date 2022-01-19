@@ -273,7 +273,7 @@ class Ban(commands.Cog):
 
         if mcid.casefold() not in minecraft_id_list:
             message = '指定されたIDは見つかりませんでした'
-            return [None,message]
+            return message
 
         user_index = minecraft_id_list.index(mcid.casefold())
         user_data = json_data[user_index]
@@ -294,8 +294,8 @@ class Ban(commands.Cog):
         embed.add_field(name="日時", value=time, inline=True)
         embed.add_field(
             name="リンク", value=f"[{message_link}]({message_link})", inline=False)
-        return [embed]
-        
+        return embed
+
     async def _uuid(self, ctx: commands.context, mcid: str):
         res, status_code = self.get_uuid(mcid)
         if status_code == 204:
@@ -343,6 +343,7 @@ class Ban(commands.Cog):
     @ commands.command(name='search', aliases=['Search', 'SEARCH', 's'])
     async def _search_normal(self, ctx, mcid):
         result = self._search(ctx,mcid)
+        print(type(result))
         await ctx.send(result)
 
     @commands.command(name='uuid', alliases=['UUID'])
@@ -355,7 +356,7 @@ class Ban(commands.Cog):
     async def _tempban_slash(self, ctx: commands.context, term: str, mcid: str, reason: str):
         result = self._tempban(ctx,term,mcid,reason)
         await ctx.respond(result)
-    
+
     @slash_command(guild_ids=[267396486088622080],name="ban")
     async def _ban_slash(self, ctx: commands.context, arg: str, mcid: str, reason: str):
         result = self._ban(ctx,arg,mcid,reason)
