@@ -2,12 +2,12 @@ import os
 import discord
 from discord.ext import commands
 
-TOKEN = os.environ["KIRBY_TOKEN"]
+TOKEN = os.environ["DEBUG_TOKEN"]
 
 
 intents = discord.Intents.all()
 
-bot = commands.Bot(command_prefix='/', intents=intents, help_command=None)
+bot = commands.Bot(command_prefix='//', intents=intents, help_command=None)
 
 cog_list = ['Forward', 'Ban', 'Help']
 
