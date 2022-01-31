@@ -4,8 +4,6 @@ import re
 import datetime
 import discord
 from discord.ext import commands
-from discord.commands import slash_command
-
 
 class Ban(commands.Cog):
     def __init__(self, bot: commands.bot):
@@ -50,7 +48,7 @@ class Ban(commands.Cog):
         url = f'https://crafatar.com/avatars/{uuid}'
         return url
 
-    def _tempban(self, ctx: commands.context, term: str, mcid: str, reason: str):
+    def _tempban(self, ctx:commands.Context, term: str, mcid: str, reason: str):
         # 最新のBAN情報を読み出し
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
@@ -66,10 +64,10 @@ class Ban(commands.Cog):
             return message
 
         # ニックネームが設定されているか確認　設定されていない場合名前を指定
-        if ctx.author.nick is None:
-            registerer: str = ctx.author.name
+        if ctx.message.author.nick is None:
+            registerer: str = ctx.message.author.name
         else:
-            registerer: str = ctx.author.nick
+            registerer: str = ctx.message.author.nick
 
         # メッセージリンクを作成
         message_link = 'https://discord.com/channels/{0}/{1}/{2}'.format(
@@ -126,7 +124,7 @@ class Ban(commands.Cog):
         # メッセージを送信
         return embed
 
-    def _ban(self, ctx: commands.context, arg: str, mcid: str, reason: str):
+    def _ban(self, ctx: commands.Context, arg: str, mcid: str, reason: str):
         # 最新のBAN情報を読み出し
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
@@ -153,10 +151,10 @@ class Ban(commands.Cog):
                 return message
 
         # ニックネームが設定されているか確認　設定されていない場合名前を指定
-        if ctx.author.nick is None:
-            registerer: str = ctx.author.name
+        if ctx.message.author.nick is None:
+            registerer: str = ctx.message.author.name
         else:
-            registerer: str = ctx.author.nick
+            registerer: str = ctx.message.author.nick
 
         # メッセージリンクを作成
         message_link = 'https://discord.com/channels/{0}/{1}/{2}'.format(
@@ -213,7 +211,7 @@ class Ban(commands.Cog):
         # メッセージを送信
         return embed
 
-    def _past_ban(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
+    def _past_ban(self, ctx: commands.Context, mcid: str, reason: str, registerer: str, time, message_link):
 
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
@@ -249,7 +247,7 @@ class Ban(commands.Cog):
         message = '登録しました'
         return message
 
-    def _unban(self, ctx, mcid):
+    def _unban(self, ctx:Union[commands.Context,discord.ApplicationContext], mcid:str):
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
@@ -264,7 +262,7 @@ class Ban(commands.Cog):
         message = '削除しました'
         return message
 
-    def _search(self, ctx, mcid):
+    def _search(self, ctx:commands.Context, mcid:str):
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
@@ -293,7 +291,7 @@ class Ban(commands.Cog):
             name="リンク", value=f"[{message_link}]({message_link})", inline=False)
         return embed
 
-    def _uuid(self, ctx: commands.context, mcid: str):
+    def _uuid(self, ctx:commands.Context, mcid: str):
         res, status_code = self.get_uuid(mcid)
         if status_code == 204:
             message = 'IDが見つかりませんでした'
@@ -309,7 +307,7 @@ class Ban(commands.Cog):
     @commands.command(name='tempban', alliases=['Tempban', 'TempBan', 'TempBAN' 'tempBan', 'tempBAN', 'TEMPBAN'])
     @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
-    async def _tempban_normal(self, ctx: commands.context, term: str, mcid: str, reason: str):
+    async def _tempban_normal(self, ctx:commands.Context, term: str, mcid: str, reason: str):
         result = self._tempban(ctx,term,mcid,reason)
         if isinstance(result,str):
             await ctx.send(result)
@@ -319,7 +317,7 @@ class Ban(commands.Cog):
     @commands.command(name='ban', alliases=['Ban', 'BAN'])
     @commands.guild_only()
     @commands.has_any_role(278312017775820801, 800638758394265610)
-    async def _ban_normal(self, ctx: commands.context, arg: str, mcid: str, reason: str):
+    async def _ban_normal(self, ctx: commands.Context, arg: str, mcid: str, reason: str):
         result = self._ban(ctx,arg,mcid,reason)
         if isinstance(result,str):
             await ctx.send(result)
@@ -329,7 +327,7 @@ class Ban(commands.Cog):
     @ commands.command(name='past_ban', aliases=['ob', 'pb'])
     @ commands.guild_only()
     @ commands.has_any_role(278312017775820801, 800638758394265610)
-    async def _past_ban_normal(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
+    async def _past_ban_normal(self, ctx: commands.Context, mcid: str, reason: str, registerer: str, time, message_link):
         result = self._past_ban(ctx,mcid,reason,registerer,time,message_link)
         await ctx.send(result)
 
@@ -349,49 +347,50 @@ class Ban(commands.Cog):
             await ctx.send(embed=result)
 
     @commands.command(name='uuid', alliases=['UUID'])
-    async def _uuid_normal(self, ctx: commands.context, mcid: str):
+    async def _uuid_normal(self, ctx: commands.Context, mcid: str):
         result = self._uuid(ctx,mcid)
         await ctx.send(result)
 
 # -------------------- slash_commands --------------------
-    @slash_command(guild_ids=[267396486088622080],name="tempban")
-    async def _tempban_slash(self, ctx: commands.context, term: str, mcid: str, reason: str):
-        result = self._tempban(ctx,term,mcid,reason)
-        if isinstance(result,str):
-            await ctx.respond(result)
-        elif isinstance(result,discord.Embed):
-            await ctx.respond(embed=result)
+    # @slash_command(guild_ids=[267396486088622080],name="tempban")
+    # async def _tempban_slash(self, ctx: discord.ApplicationContext, term:Option(str,"期間　何もなければ 30d を指定します。") , mcid:Option(str,"対象ユーザーのMinecraftID"), reason:Option(str,"BAN理由")):
+    #     print(ctx.interaction.message.author)
+    #     result = self._tempban(ctx,term,mcid,reason)
+    #     if isinstance(result,str):
+    #         await ctx.respond(result)
+    #     elif isinstance(result,discord.Embed):
+    #         await ctx.respond(embed=result)
 
-    @slash_command(guild_ids=[267396486088622080],name="ban")
-    async def _ban_slash(self, ctx: commands.context, arg: str, mcid: str, reason: str):
-        result = self._ban(ctx,arg,mcid,reason)
-        if isinstance(result,str):
-            await ctx.respond(result)
-        elif isinstance(result,discord.Embed):
-            await ctx.respond(embed=result)
+    # @slash_command(guild_ids=[267396486088622080],name="ban")
+    # async def _ban_slash(self, ctx: discord.ApplicationContext, arg: str, mcid: str, reason: str):
+    #     result = self._ban(ctx,arg,mcid,reason)
+    #     if isinstance(result,str):
+    #         await ctx.respond(result)
+    #     elif isinstance(result,discord.Embed):
+    #         await ctx.respond(embed=result)
 
-    @slash_command(guild_ids=[267396486088622080],name="past_ban")
-    async def _past_ban_slash(self, ctx: commands.context, mcid: str, reason: str, registerer: str, time, message_link):
-        result = self._past_ban(ctx,mcid,reason,registerer,time,message_link)
-        await ctx.respond(result)
+    # @slash_command(guild_ids=[267396486088622080],name="past_ban")
+    # async def _past_ban_slash(self, ctx: discord.ApplicationContext, mcid: str, reason: str, registerer: str, time, message_link):
+    #     result = self._past_ban(ctx,mcid,reason,registerer,time,message_link)
+    #     await ctx.respond(result)
 
-    @slash_command(guild_ids=[267396486088622080],name="unban")
-    async def _unban_slash(self, ctx, mcid):
-        result = self._unban(ctx,mcid)
-        await ctx.respond(result)
+    # @slash_command(guild_ids=[267396486088622080],name="unban")
+    # async def _unban_slash(self, ctx, mcid):
+    #     result = self._unban(ctx,mcid)
+    #     await ctx.respond(result)
 
-    @slash_command(guild_ids=[267396486088622080],name="search")
-    async def _search_slash(self, ctx, mcid):
-        result = self._search(ctx,mcid)
-        if isinstance(result,str):
-            await ctx.respond(result)
-        elif isinstance(result,discord.Embed):
-            await ctx.respond(embed=result)
+    # @slash_command(guild_ids=[267396486088622080],name="search")
+    # async def _search_slash(self, ctx, mcid):
+    #     result = self._search(ctx,mcid)
+    #     if isinstance(result,str):
+    #         await ctx.respond(result)
+    #     elif isinstance(result,discord.Embed):
+    #         await ctx.respond(embed=result)
 
-    @slash_command(guild_ids=[267396486088622080],name="uuid")
-    async def _uuid_slash(self, ctx: commands.context, mcid: str):
-        result = self._uuid(ctx,mcid)
-        await ctx.respond(result)
+    # @slash_command(guild_ids=[267396486088622080],name="uuid")
+    # async def _uuid_slash(self, ctx: discord.ApplicationContext, mcid: str):
+    #     result = self._uuid(ctx,mcid)
+    #     await ctx.respond(result)
 
 # -------------------- Error processes --------------------
     @_tempban_normal.error
