@@ -2,7 +2,7 @@ import os
 import discord
 from discord.ext import commands
 
-TOKEN = os.environ["KIRBY_TOKEN"]
+TOKEN = os.environ["DEBUG_TOKEN"]
 
 
 intents = discord.Intents.all()

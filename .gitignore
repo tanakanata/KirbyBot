@@ -2,11 +2,6 @@
 .DS_Store
 Cogs/__pycache__
 data.json
-<<<<<<< HEAD
 .env
-=======
-Cogs/memo.txt
-Pipfile
 ban_list.json
 config.json
->>>>>>> refs/remotes/origin/main
