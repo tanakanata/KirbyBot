@@ -247,7 +247,7 @@ class Ban(commands.Cog):
         message = '登録しました'
         return message
 
-    def _unban(self, ctx:Union[commands.Context,discord.ApplicationContext], mcid:str):
+    def _unban(self, ctx: commands.Context, mcid:str):
         json_data = self.load_json()
         minecraft_id_list = [i.get('minecraft_id').casefold() for i in json_data]
 
