@@ -8,7 +8,7 @@ class Help(commands.Cog):
 
     @commands.command(ailiases=['Help'])
     async def help(self, ctx):
-        msg = '//uuid <PlayerID> : UUIDを取得します \n //ban <PlayerID> <理由> : BAN情報をBOTに登録します \n //unban <PlayerID> : BAN情報をBOTから削除します \n //search <PlayerID> : BAN情報を検索します'
+        msg = '!uuid <PlayerID> : UUIDを取得します \n !ban <PlayerID> <理由> : BAN情報をBOTに登録します \n !unban <PlayerID> : BAN情報をBOTから削除します \n !search <PlayerID> : BAN情報を検索します'
 
         await ctx.send(msg)
 
