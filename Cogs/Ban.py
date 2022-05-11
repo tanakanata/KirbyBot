@@ -340,7 +340,7 @@ class Ban(commands.Cog):
 
     @ commands.command(name='search', aliases=['Search', 'SEARCH', 's'])
     async def _search_normal(self, ctx, mcid):
-        result = await self._search(ctx,mcid)
+        result = self._search(ctx,mcid)
         if isinstance(result,str):
             await ctx.send(result)
         else:
