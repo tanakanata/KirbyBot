@@ -303,10 +303,18 @@ class Ban(commands.Cog):
             message = 'サーバーエラー'
             return message
 
+
+    #RoleID
+    #Lemon 925033085198803005
+    #Admin 278312017775820801
+    #Moderator 944600025248460820
+    #Supporter 1002845230057402439
+    #Engineer 1031545798338547835
+
     # -------------------- normal_commands --------------------
     @commands.command(name='tempban', alliases=['Tempban', 'TempBan', 'TempBAN' 'tempBan', 'tempBAN', 'TEMPBAN'])
     @commands.guild_only()
-    @commands.has_any_role(278312017775820801, 800638758394265610)
+    @commands.has_any_role(278312017775820801, 944600025248460820,1002845230057402439,1031545798338547835) #Admin,Moderator,Supporter,Engineer
     async def _tempban_normal(self, ctx:commands.Context, term: str, mcid: str, reason: str):
         result = self._tempban(ctx,term,mcid,reason)
         if isinstance(result,str):
@@ -316,7 +324,7 @@ class Ban(commands.Cog):
 
     @commands.command(name='ban', alliases=['Ban', 'BAN'])
     @commands.guild_only()
-    @commands.has_any_role(278312017775820801, 800638758394265610)
+    @commands.has_any_role(278312017775820801, 944600025248460820,1002845230057402439,1031545798338547835) #Admin,Moderator,Supporter,Engineer
     async def _ban_normal(self, ctx: commands.Context, arg: str, mcid: str, reason: str):
         result = self._ban(ctx,arg,mcid,reason)
         if isinstance(result,str):
@@ -326,14 +334,14 @@ class Ban(commands.Cog):
 
     @ commands.command(name='past_ban', aliases=['ob', 'pb'])
     @ commands.guild_only()
-    @ commands.has_any_role(278312017775820801, 800638758394265610)
+    @ commands.has_any_role(925033085198803005, 1031545798338547835) #Lemon,Engineer
     async def _past_ban_normal(self, ctx: commands.Context, mcid: str, reason: str, registerer: str, time, message_link):
         result = self._past_ban(ctx,mcid,reason,registerer,time,message_link)
         await ctx.send(result)
 
     @ commands.command(name='unban', aliases=['Unban', 'UNBAN'])
     @ commands.guild_only()
-    @ commands.has_any_role(278312017775820801, 800638758394265610)
+    @ commands.has_any_role(925033085198803005, 944600025248460820, 1031545798338547835) #Admin,Moderator,Engineer
     async def _unban_normal(self, ctx, mcid):
         result = self._unban(ctx,mcid)
         await ctx.send(result)
