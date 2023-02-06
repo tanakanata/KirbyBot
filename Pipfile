@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-py-cord = {ref = "71c0711e299a1d061c6edb5994777ff19644873c", git = "https://github.com/Pycord-Development/pycord.git"}
+py-cord = "*"
 requests = "*"
 pytz = "*"
 
